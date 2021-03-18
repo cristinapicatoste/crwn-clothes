@@ -16,7 +16,7 @@ const SignIn = () => {
     setSignIn(prevValues => ({
       ...prevValues, 
       [name]: value
-    }))
+    }));
   }
 
   return (
