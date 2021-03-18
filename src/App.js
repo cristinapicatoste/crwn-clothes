@@ -4,7 +4,7 @@ import Homepage from "./pages/Homepage/Homepage";
 import Shop from "./pages/Shop/Shop";
 import SignInPage from "./pages/SignIn/SignInPage";
 import Header from "./components/Header/Header";
-import { auth } from './firebase/firabase.utils';
+import { auth, createUserProfileDocument } from './firebase/firabase.utils';
 // import { UserContext } from "./contexts/userContext";
 
 
@@ -15,9 +15,22 @@ function App() {
   console.log(userLogged);
 
   useEffect(() => {
-    auth.onAuthStateChanged(user => {
-      setUserLogged(user)
-      console.log(user);
+    auth.onAuthStateChanged( async userAuth => {
+      //createUserProfileDocument(user);
+      // setUserLogged(user)
+      // console.log(user);
+
+       if (userAuth) {
+         const userRef = await createUserProfileDocument(userAuth);
+         userRef.onSnapshot(snapShot => {
+           setUserLogged({
+             id: snapShot.id,
+             ...snapShot.data()
+           } )
+         })         
+       } else {
+         setUserLogged(userAuth);
+       }
     })
   }, [auth]);
 
