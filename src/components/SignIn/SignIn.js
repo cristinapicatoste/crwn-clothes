@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import CustomButton from '../CustomButton/CustomButton';
 import FormInput from '../FormInput/FormInput';
-import { signInWithGoogle } from "../../firebase/firabase.utils";
+import { auth, signInWithGoogle } from "../../firebase/firabase.utils";
 
 import './SignIn.scss';
 
@@ -19,6 +19,17 @@ const SignIn = () => {
     }));
   }
 
+  const handleSubmit = async () => {
+    const { email, password } = signIn;
+
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      setSignIn({ email: '', password: '' });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <div className="sign-in">
       <h2>I already have an accoumt</h2>
@@ -28,7 +39,7 @@ const SignIn = () => {
         <FormInput type="password" name="password" value={signIn.password} label="password" handleChange={handleChange} required />
       </div>
       <div className="buttons">     
-        <CustomButton type="submit"> Submit form </CustomButton>
+        <CustomButton type="submit" onClick={handleSubmit}> Submit form </CustomButton>
         <CustomButton onClick={signInWithGoogle} isGoogleSignIn > Sign In With Google </CustomButton>
       </div>
     </div>
