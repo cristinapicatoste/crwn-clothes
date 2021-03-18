@@ -4,34 +4,30 @@ import Homepage from "./pages/Homepage/Homepage";
 import Shop from "./pages/Shop/Shop";
 import SignInPage from "./pages/SignIn/SignInPage";
 import Header from "./components/Header/Header";
-import { UserContext } from "./contexts/userContext";
+import { auth } from './firebase/firabase.utils';
+// import { UserContext } from "./contexts/userContext";
 
-// import { auth } from './firebase/firabase.utils';
 
 import "./App.css";
 
 function App() {
-  // const [userLogged, setUserLogged] = useState(null);
-  // console.log(userLogged);
+  const [userLogged, setUserLogged] = useState(null);
+  console.log(userLogged);
 
-  // useEffect(() => {
-  //   auth.onAuthStateChanged(user => {
-  //     setUserLogged(user)
-  //     console.log(user);
-  //   })
-  // }, [auth]);
+  useEffect(() => {
+    auth.onAuthStateChanged(user => {
+      setUserLogged(user)
+      console.log(user);
+    })
+  }, [auth]);
 
-  // const handleLoggout = () => {
-  //   auth.onAuthStateChanged(() => setUserLogged(null));
-  // }
-
-  const { userLogged, setUserLogged, handleLoggout } = useContext(UserContext)
+  // const { userLogged, setUserLogged, handleLoggout } = useContext(UserContext)
 
 
   return (
     <>
       <Router>
-        <Header />
+        <Header currentUser={userLogged} />
         <div>
           <Switch>
             <Route exact path="/" component={Homepage} />
