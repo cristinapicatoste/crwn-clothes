@@ -5,25 +5,40 @@ import Shop from "./pages/Shop/Shop";
 import SignInPage from "./pages/SignIn/SignInPage";
 import Header from "./components/Header/Header";
 import { auth, createUserProfileDocument } from './firebase/firabase.utils';
+import { connect } from 'react-redux';
+import { setCurrentUser } from './redux/user/user.actions';
 
 import "./App.css";
 
 function App() {
-  const [userLogged, setUserLogged] = useState(null);
-  console.log(userLogged);
+  // const [userLogged, setUserLogged] = useState(null);
+  console.log(setCurrentUser);
 
   useEffect(() => {
+    // auth.onAuthStateChanged( async userAuth => {
+    //    if (userAuth) {
+    //      const userRef = await createUserProfileDocument(userAuth);
+    //      userRef.onSnapshot(snapShot => {
+    //        setUserLogged({
+    //          id: snapShot.id,
+    //          ...snapShot.data()
+    //        } )
+    //      })         
+    //    } else {
+    //      setUserLogged(userAuth);
+    //    }
+    // })
     auth.onAuthStateChanged( async userAuth => {
        if (userAuth) {
          const userRef = await createUserProfileDocument(userAuth);
          userRef.onSnapshot(snapShot => {
-           setUserLogged({
+           setCurrentUser({
              id: snapShot.id,
              ...snapShot.data()
            } )
          })         
        } else {
-         setUserLogged(userAuth);
+         setCurrentUser(userAuth);
        }
     })
   }, [auth]);
@@ -31,7 +46,8 @@ function App() {
   return (
     <>
       <Router>
-        <Header currentUser={userLogged} />
+        {/* <Header currentUser={userLogged} /> */}
+        <Header />
         <div>
           <Switch>
             <Route exact path="/" component={Homepage} />
@@ -44,4 +60,8 @@ function App() {
   );
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => ({
+  setCurrentUser: user => dispatch(setCurrentUser(user))
+})
+
+export default connect(null, mapDispatchToProps)(App);
